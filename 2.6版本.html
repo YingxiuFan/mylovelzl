@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>缘定今生预测系统</title>
+    <link href="https://fonts.font.im/css?family=ZCOOL+QingKe+HuangYou|Ma+Shan+Zheng|Pacifico|Dancing+Script|Great+Vibes"
+        rel="stylesheet">
+    <style>
+        /* 全局背景和字体设置 */
+        body {
+            background: linear-gradient(135deg, #ffb6c1, #f4c2c2, #d8bfd8);
+            /* 更柔和浪漫的背景色 */
+            font-family: 'Dancing Script', cursive;
+            /* 更浪漫的字体 */
+            min-height: 300vh;
+            /* 增大页面大小 */
+            margin: 0;
+            overflow-x: hidden;
+            position: relative;
+            text-align: center;
+            padding-bottom: 500px;
+            /* 增加底部空间 */
+        }
+
+        /* 飘落的心形动画 */
+        .heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.7);
+            /* 调整心形透明度 */
+            font-size: 25px;
+            /* 调整心形大小 */
+            animation: float 8s infinite linear;
+            /* 延长动画时间 */
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(45deg);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            /* 提高中间透明度 */
+            100% {
+                transform: translateY(-100vh) rotate(45deg);
+                opacity: 0;
+            }
+
+            /* 调整飘落距离 */
+        }
+
+        /* 主要内容容器 */
+        .container {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 90%;
+            max-width: 800px;
+            /* 容器宽度调整 */
+            transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.2);
+            /* 增加半透明背景 */
+            padding: 30px;
+            /* 调整内边距 */
+            border-radius: 15px;
+            /* 圆角 */
+            backdrop-filter: blur(8px);
+            /* 模糊效果 */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            /* 增加阴影 */
+        }
+
+        /* 头像样式 */
+        .avatar {
+            width: 180px;
+            /* 调整头像尺寸 */
+            height: 180px;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            /* 调整边框宽度 */
+            box-shadow: 0 0 30px rgba(255, 182, 193, 0.7);
+            /* 增强阴影效果 */
+            margin: 25px;
+            object-fit: cover;
+            transition: 0.3s;
+        }
+
+        /* 输入框组 */
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        /* 输入框样式 */
+        input {
+            padding: 18px;
+            font-size: 22px;
+            /* 调整字体 */
+            border: 2px solid rgba(255, 192, 203, 0.7);
+            /* 调整边框颜色透明度 */
+            border-radius: 35px;
+            /* 调整圆角 */
+            background: rgba(255, 255, 255, 0.2);
+            /* 调整背景透明度 */
+            color: #333;
+            /* 修改输入框文字颜色 */
+            width: 80%;
+            backdrop-filter: blur(6px);
+            /* 增加模糊效果 */
+            transition: 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #ff69b4;
+            box-shadow: 0 0 25px rgba(255, 105, 180, 0.4);
+            /* 增强聚焦效果 */
+        }
+
+        /* 按钮样式 */
+        button {
+            padding: 20px 45px;
+            /* 调整按钮尺寸 */
+            font-size: 26px;
+            /* 调整字体 */
+            background: linear-gradient(45deg, #ff6699, #ff99bb);
+            border: none;
+            border-radius: 45px;
+            /* 调整圆角 */
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.6);
+            /* 增强阴影效果 */
+            font-family: 'Great Vibes', cursive;
+            /* 更浪漫的字体 */
+            letter-spacing: 2px;
+            /* 调整字母间距 */
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            /* 鼠标悬停时放大 */
+        }
+
+        /* 结果项样式 */
+        .result-item {
+            margin: 40px 0;
+            opacity: 0;
+            animation: slideIn 0.8s forwards;
+            background: rgba(255, 255, 255, 0.25);
+            /* 调整背景透明度 */
+            padding: 25px;
+            /* 调整内边距 */
+            border-radius: 25px;
+            /* 调整圆角 */
+            backdrop-filter: blur(10px);
+            /* 增加模糊效果 */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            /* 增加阴影 */
+        }
+
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* 进度条样式 */
+        .progress-bar {
+            width: 80%;
+            height: 25px;
+            /* 调整进度条高度 */
+            background: rgba(255, 255, 255, 0.3);
+            /* 调整背景透明度 */
+            border-radius: 15px;
+            /* 调整圆角 */
+            margin: 25px auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress {
+            width: 99%;
+            /* 进度条改为99% */
+            height: 100%;
+            background: linear-gradient(90deg, #ffb6c1, #ffc0cb);
+            transition: 2s ease-in-out;
+            position: relative;
+        }
+
+        .progress::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 12px;
+            /* 调整进度条尾部宽度 */
+            background: rgba(255, 255, 255, 0.6);
+            /* 调整尾部透明度 */
+            transform: skewX(-30deg);
+        }
+
+        /* 图片画廊样式 */
+        .gallery {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 25vw;
+            /* 调整背景图片区域 */
+            height: 80vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: auto;
+            margin: 15px 0;
+            border-radius: 15px;
+            /* 调整圆角 */
+            filter: blur(8px) opacity(0.6);
+            /* 调整虚化效果 */
+            transform: rotate(-5deg);
+            /* 调整旋转角度 */
+            transition: 0.5s;
+        }
+
+        .gallery img:nth-child(odd) {
+            transform: rotate(-5deg);
+        }
+
+        .gallery img:nth-child(even) {
+            filter: blur(8px) opacity(0.8);
+            transform: rotate(5deg);
+        }
+
+        /* 结果容器滚动效果及隐藏滚动条 */
+        #resultContainer {
+            max-height: 1000px;
+            /* 可根据需要调整最大高度 */
+            overflow-y: auto;
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+        }
+
+        #resultContainer::-webkit-scrollbar {
+            display: none;
+            /* Chrome, Safari, Opera */
+        }
+
+        /* 标题样式 */
+        h1 {
+            font-size: 48px;
+            /* 调整标题字体 */
+            color: #333;
+            /* 修改标题文字颜色 */
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            /* 调整文字阴影 */
+        }
+
+        /* 结果标题样式 */
+        .result-item h2 {
+            font-size: 32px;
+            /* 调整结果标题字体 */
+            color: #ff6600;
+            /* 修改结果标题文字颜色 */
+            text-shadow: 0 0 8px rgba(255, 102, 0, 0.4);
+            /* 调整文字阴影 */
+        }
+
+        /* 匹配项标题样式 */
+        .match-title {
+            font-size: 24px;
+            /* 调整匹配项标题字体 */
+            color: #333;
+            /* 修改匹配项标题文字颜色 */
+        }
+
+        /* 增大最爱您的人和您最爱的人的照片 */
+        .result-item img {
+            width: 250px;
+            /* 调整图片宽度 */
+            height: auto;
+            /* 保持图片比例 */
+        }
+
+        /* 温馨提示样式 */
+        .tip {
+            font-size: 24px;
+            color: #ff6699;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* 100%特殊显示 */
+        .highlight {
+            font-size: 32px;
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+                /* 海报样式 */
+        .congrats-poster {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Great Vibes', 'Dancing Script', '方正手札体', cursive;
+            font-size: 5vw;
+            background: linear-gradient(135deg, #4B0082, #8A2BE2, #DA70D6); /* 浪漫渐变色 */
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 15px rgba(255, 192, 203, 0.9), 0 0 30px rgba(255, 182, 193, 0.7), 0 0 45px rgba(255, 105, 180, 0.5);
+            animation: floatGlow 3s infinite alternate ease-in-out;
+            z-index: 999;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 25px 50px;
+            border-radius: 25px;
+            box-shadow: 0 0 40px rgba(255, 192, 203, 0.6);
+            backdrop-filter: blur(10px);
+        }
+
+        /* 浮动光晕动画 */
+        @keyframes floatGlow {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                text-shadow: 0 0 20px rgba(255, 105, 180, 0.9), 0 0 35px rgba(255, 182, 193, 0.7);
+            }
+            100% {
+                transform: translate(-50%, -52%) scale(1.05);
+                text-shadow: 0 0 30px rgba(255, 105, 180, 1), 0 0 50px rgba(255, 182, 193, 0.9);
+            }
+        }
+
+        @keyframes scaleIn {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="heart" style="left:10%; animation-delay:1s">❤</div>
+    <div class="heart" style="left:30%; animation-delay:3s">❤</div>
+    <div class="heart" style="left:70%; animation-delay:2s">❤</div>
+
+    <div class="gallery">
+        <img src="1.jpg" alt="gallery">
+        <img src="2.jpg" alt="gallery">
+        <img src="3.jpg" alt="gallery">
+        <img src="4.jpg" alt="gallery">
+    </div>
+    <div class="gallery" style="right: 2%;">
+        <img src="5.jpg" alt="gallery">
+        <img src="6.jpg" alt="gallery">
+        <img src="7.jpg" alt="gallery">
+        <img src="8.jpg" alt="gallery">
+        <img src="9.jpg" alt="gallery">
+    </div>
+
+    <div class="container">
+        <h1>✨ 缘定三生预测系统 ✨</h1>
+        <div class="input-group">
+            <input type="text" id="nameInput" placeholder="请输入您的姓名">
+        </div>
+        <button onclick="startPrediction()">预测您的命定缘人</button>
+        <div id="resultContainer" class="result-container"></div>
+    </div>
+
+    <script>
+        function startPrediction() {
+            const name = document.getElementById('nameInput').value;
+            if (name === '林志莉') {
+                document.querySelector('.container').style.top = "20%";
+                document.querySelector('.gallery').style.filter = "blur(0px)"; // 预测后减少虚化
+                document.querySelector('.gallery').style.zIndex = 1; // 移至最上层
+
+                const container = document.getElementById('resultContainer');
+                container.style.display = 'block';
+                container.innerHTML = `
+                    ${createResultItem('最爱您的人', '范颖秀', '最爱您的人.jpg')}
+                    ${createResultItem('您最爱的人', '范颖秀', '您最爱的人.jpg')}
+                    <div class="result-item" style="animation-delay: 1.2s">
+                        <h2 style="color:#ff6600;font-size:2em">命中注定的相濡以沫</h2>
+                        ${Array(8).fill().map((_,i) => `
+                            <div class="match-item" style="animation-delay: ${1.5+i*0.2}s">
+                                <div class="match-title">${getRomanticTitle(i)}：范颖秀 99%</div>
+                                <div class="progress-bar">
+                                    <div class="progress"></div>
+                                </div>
+                            </div>
+                        `).join('')}
+                        <div class="tip">温馨提示：现在亲他一口，即可升级为 <span class="highlight">100%</span></div>
+                        <button onclick="kiss()">亲一下</button>
+                    </div>
+                `;
+            }
+        }
+
+        function createResultItem(title, name, imgSrc) {
+            return `
+                <div class="result-item" style="animation-delay: ${title === '最爱您的人'? '0.6s' : '0.8s'}">
+                    <h2>${title}</h2>
+                    <img src="${imgSrc}" alt="${name}">
+                    <h3>${name}</h3>
+                </div>
+            `;
+        }
+
+        function getRomanticTitle(index) {
+            const titles = ['情深似海', '情比金坚', '心心相印', '一往情深', '情真意切', '情意绵绵', '如胶似漆', '相濡以沫'];
+            return titles[index];
+        }
+
+        function kiss() {
+            const container = document.getElementById('resultContainer');
+            container.innerHTML = `
+                ${createResultItem('最爱您的人', '范颖秀', '最爱您的人.jpg')}
+                ${createResultItem('您最爱的人', '范颖秀', '您最爱的人.jpg')}
+                <div class="result-item" style="animation-delay: 1.2s">
+                    <h2 style="color:#ff6600;font-size:2em">命中注定的相濡以沫</h2>
+                    ${Array(8).fill().map((_,i) => `
+                        <div class="match-item" style="animation-delay: ${1.5+i*0.2}s">
+                            <div class="match-title">${getRomanticTitle(i)}：范颖秀 <span class="highlight">100%</span></div>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                    `).join('')}
+                    <div class="congrats-poster">恭喜您找到了世上独一无二的命定良人——范颖秀</div>
+                </div>
+            `;
+        }
+    </script>
+
+</body>
+
+</html>
